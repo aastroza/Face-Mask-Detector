@@ -5,6 +5,7 @@ from app import faceDetector as detector
 import base64
 import numpy as np
 import cv2
+import traceback
 
 @app.route('/')
 def index():
@@ -35,37 +36,37 @@ def upload_file():
         image = cv2.imdecode(np.fromstring(file.read(), np.uint8), cv2.IMREAD_UNCHANGED)
         
         # Detect faces
-        faces = detector.detect_faces(image)
+        faces, label = detector.detect_faces(image)
+
+        faceMaskDetected = label
 
         if len(faces) == 0:
             faceDetected = False
             num_faces = 0
             to_send = ''
         else:
-            faceMaskDetected = faces[0]['label']
+            
             faceDetected = True
             num_faces = len(faces)
             
             # Draw a rectangle
             for item in faces:
-                detector.draw_frame(image, item['rect'], item['label'], item['color'])
+                detector.draw_frame(image, item['rect'])
             
-            # Save
-            #cv2.imwrite(filename, image)
-            
-            # In memory
-            image_small = cv2.resize(image, (0,0), fx=0.6, fy=0.6) 
-            image_content = cv2.imencode('.jpg', image_small)[1].tostring()
-            encoded_image = base64.encodestring(image_content)
-            to_send = 'data:image/jpg;base64, ' + str(encoded_image, 'utf-8')
-    except:
+           
+        image_small = cv2.resize(image, (0,0), fx=0.6, fy=0.6) 
+        image_content = cv2.imencode('.jpg', image_small)[1].tostring()
+        encoded_image = base64.encodestring(image_content)
+        to_send = 'data:image/jpg;base64, ' + str(encoded_image, 'utf-8')
+    except Exception:
+        #traceback.print_exc()
         init = False
         faceDetected = False
         num_faces = 0
         to_send = ''
         faceMaskDetected = False
 
-
+    #print(faceDetected, faceMaskDetected, num_faces, init)
     return render_template('index.html', faceDetected=faceDetected, faceMaskDetected=faceMaskDetected, num_faces=num_faces, image_to_show=to_send, init=init)
 
 

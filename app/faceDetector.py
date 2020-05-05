@@ -31,21 +31,23 @@ def detect_faces(image):
 
     # If not face detected, return empty list  
     if  len(faces) == 0:
-        return faces_list
+        #face_dict['label'] = label
+        #faces_list.append(face_dict)
+        return faces_list, label
     
     for i in range(0, len(faces)):
         (x, y, w, h) = faces[i]
         face_dict = {}
         face_dict['face'] = gray[y:y + w, x:x + h]
         face_dict['rect'] = faces[i]
-        face_dict['label'] = label
-        face_dict['color'] = color
+        #face_dict['label'] = label
+        #face_dict['color'] = color
         faces_list.append(face_dict)
 
     # Return the face image area and the face rectangle
-    return faces_list
+    return faces_list, label
 
-def draw_frame(image, rect, label, color):
+def draw_frame(image, rect):
     (x, y, w, h) = rect
     cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 255), 2)      
     #cv2.putText(image, label, (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.75, color, 2)

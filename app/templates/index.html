@@ -28,7 +28,7 @@
     
     <div class="text-center">
       {% if init %}
-        {% if faceDetected %}
+        
             {% if faceMaskDetected %}
                 <div class="alert alert-success" style="margin-top:18px;">
                     <strong>¡Genial!</strong> Estás usando una mascarilla.
@@ -48,11 +48,7 @@
                     </div>
                 {% endif %}
             {% endif %}
-        {% else %}
-          <div class="alert alert-danger" style="margin-top:18px;">
-            <strong>No</strong> se ha detectado un rostro humano en la imagen. Prueba con otra foto.
-          </div>
-        {% endif %}
+        
       {% else %}
         {% if init is defined %}
           <div class="alert alert-danger" style="margin-top:18px;">
