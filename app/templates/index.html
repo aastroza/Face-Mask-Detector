@@ -41,6 +41,7 @@
       .share-btn.email { background: #444444; }
        
     </style>
+    <link href="{{ url_for('static', filename='sticky-footer.css')}}" rel="stylesheet">
   </head>
   <body>
     
@@ -65,12 +66,13 @@
         <a class="share-btn email" href="mailto:?Subject=Detector de Mascarillas GeoVictoria&amp;Body=Vi%20esto%20y%20creo%20podría%20interesarte%20 https://face-mask-detector.herokuapp.com/">
           Email
         </a>
+        <br>
       </div>
     </div>
 
     <header class="navbar">
       <form action="/upload" method="post" enctype="multipart/form-data" >
-          <div align="center">
+          <div align="center" style="margin-top:20px">
               <label class="btn btn-default btn-file">
                   Selecciona una foto <input type="file" name="image" style="display: none;">
               </label>
@@ -117,6 +119,12 @@
         {% endif %}
       {% endif %}
     </div>
+    <footer class="footer">
+      <div class="container">
+        <span class="text-muted">Este sitio no guarda las imágenes de los usuarios ni ningún otro dato sensible.</span>
+      </div>
+    </footer>
   </body>
+
 
 </html>
