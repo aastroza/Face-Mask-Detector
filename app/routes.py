@@ -61,7 +61,7 @@ def upload_file():
         encoded_image = base64.encodestring(image_content)
         to_send = 'data:image/jpg;base64, ' + str(encoded_image, 'utf-8')
     except Exception:
-        #traceback.print_exc()
+        traceback.print_exc()
         init = False
         faceDetected = False
         num_faces = 0
