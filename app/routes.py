@@ -7,6 +7,8 @@ import numpy as np
 import cv2
 import traceback
 
+facebio = detector.FaceBio()
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -33,10 +35,10 @@ def upload_file():
         #file.save(filename)
 
         # Read image
-        image = cv2.imdecode(np.fromstring(file.read(), np.uint8), cv2.IMREAD_UNCHANGED)
+        image = cv2.imdecode(np.fromstring(file.read(), np.uint8), cv2.IMREAD_COLOR)
         
         # Detect faces
-        faces, label = detector.detect_faces(image)
+        faces, label = facebio.detect_faces(image)
 
         faceMaskDetected = label
 
@@ -51,10 +53,10 @@ def upload_file():
             
             # Draw a rectangle
             for item in faces:
-                detector.draw_frame(image, item['rect'])
+                facebio.draw_frame(image, item['rect'])
             
            
-        image_small = cv2.resize(image, (0,0), fx=0.6, fy=0.6) 
+        image_small = cv2.resize(image, (0,0), fx=0.3, fy=0.3) 
         image_content = cv2.imencode('.jpg', image_small)[1].tostring()
         encoded_image = base64.encodestring(image_content)
         to_send = 'data:image/jpg;base64, ' + str(encoded_image, 'utf-8')
