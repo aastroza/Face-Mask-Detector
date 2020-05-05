@@ -92,6 +92,7 @@
                     </div>
                 {% endif %}
             {% else %}
+              {% if faceDetected %}
                 <div class="alert alert-danger" style="margin-top:18px;">
                     <strong>¡Cuidado!</strong> No estás usando una mascarilla.
                 </div>
@@ -100,6 +101,12 @@
                         <img src="{{ image_to_show }}">
                     </div>
                 {% endif %}
+              {% else %}
+                <div class="alert alert-danger" style="margin-top:18px;">
+                  No se ha detectado un rostro humano en la foto. Intenta con otra imagen.
+                </div>
+
+              {% endif %}
             {% endif %}
         
       {% else %}
