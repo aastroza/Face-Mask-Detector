@@ -10,5 +10,4 @@ opencv-python==4.2.0.34
 Werkzeug==1.0.1
 wincertstore==0.2
 torch
-torchvision
 fastai
