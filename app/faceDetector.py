@@ -1,7 +1,7 @@
 import cv2
 from fastai.vision import *
 import torch
-from facenet_pytorch import MTCNN, InceptionResnetV1
+
 
 #face_cascade=cv2.CascadeClassifier("./app/model/haarcascade_frontalface_default.xml")
 #ds_factor=0.75
