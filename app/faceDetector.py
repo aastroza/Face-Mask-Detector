@@ -8,15 +8,16 @@ from facenet_pytorch import MTCNN, InceptionResnetV1
 #face_mask_learn = load_learner('./app/model')
 class FaceBio():
     def __init__(self):
-        self.device = torch.device('cpu')
+        # self.device = torch.device('cpu')
 
-        self.mtcnn = MTCNN(
-            image_size=160, margin=0, min_face_size=20,
-            thresholds=[0.6, 0.7, 0.7], factor=0.709, post_process=True,
-            device=self.device
-        )
+        # self.mtcnn = MTCNN(
+        #     image_size=160, margin=0, min_face_size=20,
+        #     thresholds=[0.6, 0.7, 0.7], factor=0.709, post_process=True,
+        #     device=self.device
+        # )
 
-        self.resnet = InceptionResnetV1(pretrained='vggface2').eval().to(self.device)
+        #self.resnet = InceptionResnetV1(pretrained='vggface2').eval().to(self.device)
+        self.face_cascade=cv2.CascadeClassifier("./app/model/haarcascade_frontalface_default.xml")
         self.face_mask_learn = load_learner('./app/model')
 
 
@@ -36,27 +37,27 @@ class FaceBio():
             color = (0, 0, 255)
             label = False
 
-        faces, probs = self.mtcnn.detect(image)
+        #faces, probs = self.mtcnn.detect(image)
 
         # Convert the test image to gray scale (opencv face detector expects gray images)
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
         # Detect multiscale images (some images may be closer to camera than others)
         # result is a list of faces
-        #faces = face_cascade.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=5);
+        faces = self.face_cascade.detectMultiScale(gray, scaleFactor=1.2, minNeighbors=5);
 
         # If not face detected, return empty list  
-        if  faces is None:
+        if  len(faces) == 0:
             #face_dict['label'] = label
             #faces_list.append(face_dict)
             return faces_list, label
         else:
             for i in range(0, len(faces)):
-                (x, y, x2, y2) = faces[i]
+                (x, y, w, h) = faces[i]
                 #print(x, y, w, h)
                 face_dict = {}
-                face_dict['face'] = gray[int(y):int(y) + int(x2 - x,), int(x):int(x) + int(y2 - y)]
-                face_dict['rect'] = (x, y, x2 - x, y2 - y)
+                face_dict['face'] = gray[int(y):int(y) + int(w), int(x):int(x) + int(h)]
+                face_dict['rect'] = (x, y, w, h)
                 #face_dict['label'] = label
                 #face_dict['color'] = color
                 faces_list.append(face_dict)

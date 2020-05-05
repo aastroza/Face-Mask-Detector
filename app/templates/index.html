@@ -2,16 +2,59 @@
   <head>
     <title>Geovictoria: Detector de Mascarillas</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style type="text/css">
+ 
+      .share-btn {
+        display: inline-block;
+        color: #ffffff;
+        border: none;
+        padding: 0.1em 0.6em;
+        outline: none;
+        text-align: center;
+        font-size: 0.9em;
+        margin: 0 0.2em;
+      }
+
+      .share-btn:focus,
+      .share-btn:hover {
+        text-decoration: none;
+        opacity: 0.8;
+      }
+
+      .share-btn:active {
+        color: #e2e2e2;
+      }
+
+      .share-btn.twitter { background: #55acee; }
+      .share-btn.facebook { background: #3B5998; }
+      .share-btn.linkedin    { background: #4875B4; }
+      .share-btn.email { background: #444444; }
+       
+    </style>
   </head>
   <body>
+    
     <div class = "container">
       <div class = "starter-template">
         
           <h1>Detección de Mascarilla</h1>
           <p class = "lead">Prueba subiendo una foto y luego apretando el botón <b>Enviar</b>.</p>
-          <p>Creado por <a href="https://www.geovictoria.com/">GeoVictoria</a> Labs.</p>
-          <p>Autor: <a href="http://twitter.com/aastroza">Alonso Astroza</a>, Mayo 2020.</p>
-
+          <p>Creado por <a href="https://www.geovictoria.com/">GeoVictoria</a> Labs. Autor: <a href="http://twitter.com/aastroza">Alonso Astroza</a>, Mayo 2020.</p>
+          <p>Comparte este sitio:</p>
+      </div>
+      <div class="share-btns"></div>
+        <a href="http://www.facebook.com/sharer.php?u=https://face-mask-detector.herokuapp.com/" class="share-btn facebook" target="_blank">
+          Facebook
+        </a>
+        <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url=https://face-mask-detector.herokuapp.com/"  class="share-btn linkedin" target="_blank">
+          Linkedin
+        </a>
+        <a href="https://twitter.com/share?url=https://face-mask-detector.herokuapp.com/&amp;text=Detector%20de%20Mascarillas%20@GeoVictoriaCL&amp;hashtags=yousomascarilla" class="share-btn twitter" target="_blank">
+          Twitter
+        </a>
+        <a class="share-btn email" href="mailto:?Subject=Detector de Mascarillas GeoVictoria&amp;Body=Vi%20esto%20y%20creo%20podría%20interesarte%20 https://face-mask-detector.herokuapp.com/">
+          Email
+        </a>
       </div>
     </div>
 
