@@ -7,7 +7,16 @@ import numpy as np
 import cv2
 import traceback
 
+
 facebio = detector.FaceBio()
+
+
+
+def readb64(uri):
+   encoded_data = uri.split(',')[1]
+   nparr = np.fromstring(base64.b64decode(encoded_data), np.uint8)
+   img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+   return img
 
 @app.route('/')
 def index():
@@ -25,17 +34,19 @@ def index():
 #                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/upload', methods=['POST'])
-def upload_file():
+def upload():
     try:
         init = True
-        file = request.files['image']
+        #print(request.form)
+        file = request.form['image']
 
         # Save file
         #filename = 'static/' + file.filename
         #file.save(filename)
 
         # Read image
-        image = cv2.imdecode(np.fromstring(file.read(), np.uint8), cv2.IMREAD_COLOR)
+        #image = cv2.imdecode(np.fromstring(file.read(), np.uint8), cv2.IMREAD_COLOR)
+        image = readb64(file)
         
         # Detect faces
         faces, label = facebio.detect_faces(image)
@@ -56,7 +67,7 @@ def upload_file():
                 facebio.draw_frame(image, item['rect'])
             
            
-        image_small = cv2.resize(image, (0,0), fx=0.3, fy=0.3) 
+        image_small = cv2.resize(image, (0,0), fx=1, fy=1) 
         image_content = cv2.imencode('.jpg', image_small)[1].tostring()
         encoded_image = base64.encodestring(image_content)
         to_send = 'data:image/jpg;base64, ' + str(encoded_image, 'utf-8')
@@ -67,10 +78,16 @@ def upload_file():
         num_faces = 0
         to_send = ''
         faceMaskDetected = False
+    
+    response_dict = {
+        'faceDetected': faceDetected, 
+        'faceMaskDetected': faceMaskDetected,
+        'num_faces': num_faces,
+        'image_to_show': to_send,
+        'init': init
+    }
 
-    #print(faceDetected, faceMaskDetected, num_faces, init)
-    return render_template('index.html', faceDetected=faceDetected, faceMaskDetected=faceMaskDetected, num_faces=num_faces, image_to_show=to_send, init=init)
-
+    return response_dict
 
 
 

@@ -9,6 +9,9 @@
 
       gtag('config', 'UA-165628879-1');
     </script>
+    <script type="text/javascript" src="{{ url_for('static', filename='webcam.min.js')}}"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    
 
     <title>Geovictoria: Detector de Mascarillas</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -73,58 +76,87 @@
     <header class="navbar">
       <form action="/upload" method="post" enctype="multipart/form-data" >
           <div align="center" style="margin-top:20px">
-              <label class="btn btn-default btn-file">
-                  Selecciona una foto <input type="file" name="image" style="display: none;">
-              </label>
-              <input type="submit" value="Enviar" class="btn btn-primary">
+              <div id="webcam" style="margin-bottom:10px"></div>
+              <input type="button" value="Revisar" class="btn btn-primary" onclick="take_snapshot()">
           </div>
       </form>
     </header>
     
-    <div class="text-center">
-      {% if init %}
-        
-            {% if faceMaskDetected %}
-                <div class="alert alert-success" style="margin-top:18px;">
-                    <strong>¡Genial!</strong> Estás usando una mascarilla.
-                </div>
-                {% if image_to_show %}
-                    <div>
-                        <img src="{{ image_to_show }}">
-                    </div>
-                {% endif %}
-            {% else %}
-              {% if faceDetected %}
-                <div class="alert alert-danger" style="margin-top:18px;">
-                    <strong>¡Cuidado!</strong> No estás usando una mascarilla.
-                </div>
-                {% if image_to_show %}
-                    <div>
-                        <img src="{{ image_to_show }}">
-                    </div>
-                {% endif %}
-              {% else %}
-                <div class="alert alert-danger" style="margin-top:18px;">
-                  No se ha detectado un rostro humano en la foto. Intenta con otra imagen.
-                </div>
-
-              {% endif %}
-            {% endif %}
-        
-      {% else %}
-        {% if init is defined %}
-          <div class="alert alert-danger" style="margin-top:18px;">
-            Primero debes subir una imagen con el botón "Selecciona una foto"
-          </div>
-        {% endif %}
-      {% endif %}
-    </div>
+    <div class="text-center" id="content"></div>
     <footer class="footer">
       <div class="container">
         <span class="text-muted">Este sitio no guarda las imágenes de los usuarios ni ningún otro dato sensible.</span>
       </div>
     </footer>
   </body>
+
+  <script language="JavaScript">
+    Webcam.set({
+        width: 320,
+        height: 240,
+        image_format: 'jpeg',
+        jpeg_quality: 90
+    });
+    Webcam.attach('#webcam');
+
+    function getHTMLTemplate(bodyFormData) {
+      return axios.post( '/upload',
+            bodyFormData,
+            {
+              headers: {
+                  'Content-Type': 'multipart/form-data'
+              }
+            }
+          ).then(response => {
+            this.response = response.data
+           
+            return this.response
+          })
+    };
+
+
+    function take_snapshot() {
+			// take snapshot and get image data
+			Webcam.snap( function(data_uri) {
+				// display results in page
+          var file =  data_uri;
+          var bodyFormData = new FormData();
+          bodyFormData.append('image', file);
+
+          getHTMLTemplate(bodyFormData)
+            .then(data => {
+              var text = ""
+              if(data.faceMaskDetected){
+                text = text.concat("<div class=\"alert alert-success\" style=\"margin-top:10px;\"><strong>¡Genial!</strong> Estás usando una mascarilla.</div>");
+                if(data.image_to_show){
+                  text = text.concat("<div><img src=\"")
+                  text = text.concat(data.image_to_show)
+                  text = text.concat("\"></div>")
+                  
+                }
+              }
+              else{
+                if(data.faceDetected){
+                  text = text.concat("<div class=\"alert alert-danger\" style=\"margin-top:10px;\"><strong>¡Cuidado!</strong> No estás usando una mascarilla.</div>");
+                  if(data.image_to_show){
+                    text = text.concat("<div><img src=\"")
+                    text = text.concat(data.image_to_show)
+                    text = text.concat("\"></div>")
+                  
+                  }
+                }
+                else{
+                  text = text.concat("<div class=\"alert alert-danger\" style=\"margin-top:10px;\">No se ha detectado un rostro humano en la foto. Intenta con otra imagen.</div>");
+                }
+              }
+              
+              document.getElementById("content").innerHTML = text;
+            });
+
+
+		});
+  } 
+  </script>
 
 
 </html>
