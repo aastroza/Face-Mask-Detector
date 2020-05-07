@@ -17,6 +17,27 @@
     <script type="text/javascript" src="{{ url_for('static', filename='webcam.min.js')}}"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '557226321601922',
+      cookie     : true,
+      xfbml      : true,
+      version    : 'v7.0'
+    });
+      
+    FB.AppEvents.logPageView();   
+      
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
 
     <title>Geovictoria: Detector de Mascarillas</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -53,7 +74,9 @@
     <link href="{{ url_for('static', filename='sticky-footer.css')}}" rel="stylesheet">
   </head>
   <body>
-    
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/es_LA/sdk.js#xfbml=1&version=v7.0&appId=557226321601922&autoLogAppEvents=1"></script>
+
     <div class = "container">
       <div class = "starter-template">
         
@@ -64,6 +87,12 @@
           <p>Creado por <a href="https://www.geovictoria.com/">GeoVictoria</a> Labs. Autor: <a href="http://twitter.com/aastroza">Alonso Astroza</a>, Mayo 2020.</p>
           
       </div>
+      <div class="fb-login-button" data-size="large" data-button-type="continue_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="true" data-width=""></div>
+
+<fb:login-button 
+  scope="public_profile,email"
+  onlogin="checkLoginState();">
+</fb:login-button>
       <div class="share-btns">
         Comparte este sitio:
         <a href="http://www.facebook.com/sharer.php?u=https://tienesmascara.geovictoria.com/" class="share-btn facebook" target="_blank">
@@ -182,7 +211,17 @@
 
 
 		});
-  } 
+  }
+
+
+FB.getLoginStatus(function(response) {
+    statusChangeCallback(response);
+}); 
+function checkLoginState() {
+  FB.getLoginStatus(function(response) {
+    statusChangeCallback(response);
+  });
+}
   </script>
 
 
